@@ -1,0 +1,70 @@
+<html>
+<head>
+    <!--
+    This is the library that provides websocket streaming pub/sub
+    The dev serverver is serving the html and javascript, but it also provides updating fx data on /fx/prices.
+     -->
+    <script src="stomp.js"></script>
+    <script src="sparkline.js"></script>
+</head>
+<body>
+
+ <div>
+   <section class="implementation-details">  
+    <h2>Assumptions</h1>
+    <ul>
+        <li>I assumed that sorting should be in ascending order by last changed bid</li>
+        <li>I assumed that we need to show sparkline in last column of every row</li>
+    </ul>
+
+    <h2>Approach</h1>
+    <ul>
+        <li>Created utils.js module using CommonJS, which contains all the required functions</li>
+        <li>To avoid re-rendering of table I am finding the index where new data has to be inserted and adding the row at that particular index of table</li>
+        <li>Added timestamp attribute in each received object, to manage last 30 seconds data to be shown as a sparkline</li>
+        <li>Added jasmine for unit testing</li>
+        <li>By default jasmine don't show report of successful unit tests, So I have modified the report to show success logs with details</li>
+        <li>You can find the test files in "spec/test_files" location</li>   
+    </ul>
+
+    <h2>Steps to run the assignment</h1>
+    <ul>
+        <li>npm install</li>
+        <li>npm start</li>
+    </ul>
+
+    <h2>Steps to run the unit tests</h1>
+    <ul>
+        <li>npm test</li>
+    </ul>
+
+    <h2>Other details</h1>
+        <ul>
+            <li>Name: Pravin Mohite</li>
+            <li>Email: pravinmohiteait@gmail.com</li>
+        </ul>
+    <h2>Assignment is implemented below :- </h1>
+  </section>
+  
+   <table class="currency-pairs-table">
+      <thead>
+          <tr>
+              <th>Name</th>
+              <th>Current best bid price</th>
+              <th>Current best ask price</th>
+              <th>Last changed bid</th>
+              <th>Last changed price</th>  
+              <th>Mid price spark line</th>
+          </tr>
+      </thead>
+      <tbody id="currency-pairs-tablebody">
+      </tbody> 
+   </table>    
+ </div>   
+
+<!-- Code you write in index.js and anything it depends on will be bundled into bundle.js and
+     is included here -->
+<script src="bundle.js"></script>
+
+</body>
+</html>
