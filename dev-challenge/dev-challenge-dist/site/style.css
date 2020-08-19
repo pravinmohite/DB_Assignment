@@ -78,7 +78,7 @@ table.currency-pairs-table th {
 
 table.currency-pairs-table td, table.currency-pairs-table th {
     border: 1px solid #dddddd;
-    text-align: left;
+    text-align: center;
     padding: 14px;
 }
   

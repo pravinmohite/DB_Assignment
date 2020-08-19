@@ -2,7 +2,7 @@ const utils = require('../../es6/utils.js');
 
 describe("Utility functions: ", function() {
 
-    it('updateTable function should merge the data if name already exists',function() {
+    it('updateTable function should merge the data if data with same name already exists',function() {
       let data={};
       data.body='{"name":"gbpusd","bestBid":1.4131038790774102,"bestAsk":1.4529379044147512,"openBid":1.431927614908346,"openAsk":1.4854723850916542,"lastChangeAsk":-0.026322435893355145,"lastChangeBid":3.0487445430375919}'
       let result=utils.updateTable(data);

@@ -16,13 +16,15 @@
     <ul>
         <li>I assumed that sorting should be in ascending order by last changed bid</li>
         <li>I assumed that we need to show sparkline in last column of every row</li>
+        <li>I assumed that if we get the data with the same name , we need to merge it</li>
     </ul>
 
     <h2>Approach</h1>
     <ul>
         <li>Created utils.js module using CommonJS, which contains all the required functions</li>
-        <li>To avoid re-rendering of table I am finding the index where new data has to be inserted and adding the row at that particular index of table</li>
-        <li>Added timestamp attribute in each received object, to manage last 30 seconds data to be shown as a sparkline</li>
+        <li>Added timestamp attribute to manage last 30 seconds data to be shown as a sparkline</li>
+        <li>Added meta viewport element,So that web page can adjust its width according to viewport</li>
+        <li>Added required styling to make page responsive with horizontal scroll for table</li>
         <li>Added jasmine for unit testing</li>
         <li>By default jasmine don't show report of successful unit tests, So I have modified the report to show success logs with details</li>
         <li>You can find the test files in "spec/test_files" location</li>   
