@@ -2,16 +2,19 @@ let tableBodyId='currency-pairs-tablebody';
 let currencyPairData=[];
 const seconds=30;
 
-function filterByTimeStamp(midPrice) {
+function filterByTimeStamp(data) {
   let time=Date.now()-seconds*1000;
-  let result= midPrice.map((item)=> {
-    if(item.timeStamp>=time)
-      return item.midPrice;
-  }).filter((item)=>{
-     if(item)
-      return item;
+  let result= data.filter((item)=> {
+    return item.timeStamp>=time;
   })
-  return result;
+ return result;
+}
+
+function returnMidPriceAsArray(data) {
+  let result= data.map((item)=>{
+     return item.midPrice;
+   })
+  return result; 
 }
 
 function drawSparkLine(finalMidPriceList,id) {
@@ -19,36 +22,67 @@ function drawSparkLine(finalMidPriceList,id) {
   Sparkline.draw(sparks,finalMidPriceList);
 }
 
-function insertRowToTable(currencyPairData,parsedData,index) {
+function insertRowToTable(currencyPairData) {
   var table= document.getElementById(tableBodyId);
-  var row = table.insertRow(index);
-  var cellName = row.insertCell(0);
-  var cellBestBid = row.insertCell(1);
-  var cellBestAsk = row.insertCell(2);
-  var cellLastChangeBid = row.insertCell(3);
-  var cellLastChangeAsk = row.insertCell(4);
-  cellName.innerHTML = parsedData.name;
-  cellBestBid.innerHTML = parsedData.bestBid;
-  cellBestAsk.innerHTML = parsedData.bestAsk;
-  cellLastChangeBid.innerHTML = parsedData.lastChangeBid;
-  cellLastChangeAsk.innerHTML = parsedData.lastChangeAsk;
-  let tempMidPrice=(parsedData.bestAsk+parsedData.bestBid)/2;
-  parsedData.midPrice=tempMidPrice;
+  table.innerHTML="";
+  let row,cellName,cellBestAsk,cellBestBid,cellLastChangeAsk,cellLastChangeBid;
 
-  let cellMidPriceSparkLine=row.insertCell(5);
-  cellMidPriceSparkLine.id=`mid-price-sparkline_${index}`;
-  let finalMidPriceList=filterByTimeStamp(currencyPairData);
-  drawSparkLine(finalMidPriceList,cellMidPriceSparkLine.id);
+  currencyPairData.forEach((data,index) => {
+    let parsedData=data.parsedData;
+    row = table.insertRow(index);
+    cellName = row.insertCell(0);
+    cellBestBid = row.insertCell(1);
+    cellBestAsk = row.insertCell(2);
+    cellLastChangeBid = row.insertCell(3);
+    cellLastChangeAsk = row.insertCell(4);
+    
+    cellName.innerHTML = parsedData.name;
+    cellBestBid.innerHTML = parsedData.bestBid;
+    cellBestAsk.innerHTML = parsedData.bestAsk;
+    cellLastChangeBid.innerHTML = parsedData.lastChangeBid;
+    cellLastChangeAsk.innerHTML = parsedData.lastChangeAsk;
+  
+    let cellMidPriceSparkLine=row.insertCell(5);
+    cellMidPriceSparkLine.id=`mid-price-sparkline_${index}`;
+    data.sparklineData=filterByTimeStamp(data.sparklineData);
+    let finalMidPriceList=returnMidPriceAsArray(data.sparklineData);
+    drawSparkLine(finalMidPriceList,cellMidPriceSparkLine.id);
+
+ });
 }
 
-function updateTable(data) {
+function updateTable(data) { 
   let parsedData=JSON.parse(data.body);
-  parsedData.timeStamp=Date.now();
-  currencyPairData.push(parsedData);
+  let index=0;
+  let sparklineObj={};  
+  sparklineObj.timeStamp=Date.now();
+  sparklineObj.midPrice=(parsedData.bestAsk+parsedData.bestBid)/2;
+  if(currencyPairData.length>0) {
+      index=currencyPairData.findIndex((item)=>{
+      return item.parsedData.name==parsedData.name;
+    })
+    if(index>-1) {
+     currencyPairData[index].parsedData=parsedData;
+     if(!currencyPairData[index].sparklineData)
+       currencyPairData[index].sparklineData=[];
+     currencyPairData[index].sparklineData.push(sparklineObj);
+    }
+    else {
+     currencyPairData.push({
+       parsedData:parsedData,
+       sparklineData:[sparklineObj]
+     })
+    }
+  }
+  else {
+    currencyPairData.push({
+      parsedData:parsedData,
+      sparklineData:[sparklineObj]
+    })
+  }  
   currencyPairData.sort(function(a,b) {
-    return a.lastChangeBid-b.lastChangeBid;
+    return a.parsedData.lastChangeBid-b.parsedData.lastChangeBid;
   })
-  let index=currencyPairData.indexOf(parsedData);
   return {currencyPairData,parsedData,index};
 }
 
@@ -56,3 +90,4 @@ exports.updateTable=updateTable;
 exports.insertRowToTable=insertRowToTable;
 exports.filterByTimeStamp=filterByTimeStamp;
 exports.currencyPairData=currencyPairData;
+exports.returnMidPriceAsArray=returnMidPriceAsArray;

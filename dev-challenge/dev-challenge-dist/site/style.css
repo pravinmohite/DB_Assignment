@@ -49,14 +49,19 @@ table {
   }
  
  /*-----Custom css added---*/
+ .table-responsive {
+    overflow-x: auto;
+    margin-top:30px;
+    margin-bottom:30px;
+ }
+
 .implementation-details {
     width:90%;
     margin: auto;
 }
+
 table.currency-pairs-table {
-     margin-top:30px;
-     margin-bottom:30px;
-     width:90%;
+    width:90%;
 } 
 
 table.currency-pairs-table thead{
@@ -77,3 +82,8 @@ table.currency-pairs-table td, table.currency-pairs-table th {
     padding: 14px;
 }
   
+@media only screen and (min-width:1025px) {  
+    table.currency-pairs-table {
+        table-layout: fixed;
+    } 
+}
