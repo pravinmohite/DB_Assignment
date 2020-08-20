@@ -25,29 +25,24 @@ function drawSparkLine(finalMidPriceList,id) {
 function insertRowToTable(currencyPairData) {
   var table= document.getElementById(tableBodyId);
   table.innerHTML="";
-  let row,cellName,cellBestAsk,cellBestBid,cellLastChangeAsk,cellLastChangeBid;
-
   currencyPairData.forEach((data,index) => {
     let parsedData=data.parsedData;
-    row = table.insertRow(index);
-    cellName = row.insertCell(0);
-    cellBestBid = row.insertCell(1);
-    cellBestAsk = row.insertCell(2);
-    cellLastChangeBid = row.insertCell(3);
-    cellLastChangeAsk = row.insertCell(4);
-    
+    let row = table.insertRow(index);
+    let cellName = row.insertCell(0);
+    let cellBestBid = row.insertCell(1);
+    let cellBestAsk = row.insertCell(2);
+    let cellLastChangeBid = row.insertCell(3);
+    let cellLastChangeAsk = row.insertCell(4);
     cellName.innerHTML = parsedData.name;
     cellBestBid.innerHTML = parsedData.bestBid;
     cellBestAsk.innerHTML = parsedData.bestAsk;
     cellLastChangeBid.innerHTML = parsedData.lastChangeBid;
     cellLastChangeAsk.innerHTML = parsedData.lastChangeAsk;
-  
     let cellMidPriceSparkLine=row.insertCell(5);
     cellMidPriceSparkLine.id=`mid-price-sparkline_${index}`;
     data.sparklineData=filterByTimeStamp(data.sparklineData);
     let finalMidPriceList=returnMidPriceAsArray(data.sparklineData);
     drawSparkLine(finalMidPriceList,cellMidPriceSparkLine.id);
-
  });
 }
 
@@ -83,7 +78,7 @@ function updateTable(data) {
   currencyPairData.sort(function(a,b) {
     return a.parsedData.lastChangeBid-b.parsedData.lastChangeBid;
   })
-  return {currencyPairData,parsedData,index};
+  return currencyPairData;
 }
 
 exports.updateTable=updateTable;

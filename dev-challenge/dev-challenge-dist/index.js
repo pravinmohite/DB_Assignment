@@ -30,7 +30,7 @@ client.debug = function(msg) {
 
 function connectCallback() {
   subscription=client.subscribe("/fx/prices", function(response) {
-    let {currencyPairData,parsedData,index}=utils.updateTable(response);
+    let currencyPairData=utils.updateTable(response);
     utils.insertRowToTable(currencyPairData);
   });
 }
